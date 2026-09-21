@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/VoiceCapture.Core/VoiceCapture.Core.csproj" />
+    <Project Path="src/VoiceCapture.Windows/VoiceCapture.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/VoiceCapture.Tests/VoiceCapture.Tests.csproj" />
+  </Folder>
+</Solution>

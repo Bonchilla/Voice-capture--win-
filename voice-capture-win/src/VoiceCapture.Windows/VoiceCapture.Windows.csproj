@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\VoiceCapture.Core\VoiceCapture.Core.csproj" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="org.k2fsa.sherpa.onnx" Version="1.13.8" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>0.2.0</Version>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- WPF owns the entry point and DPI manifest; WinForms is used only for NotifyIcon. -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+  </PropertyGroup>
+
+</Project>

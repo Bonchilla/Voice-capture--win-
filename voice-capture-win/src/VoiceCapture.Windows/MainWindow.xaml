@@ -1,0 +1,76 @@
+﻿<Window x:Class="VoiceCapture.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VoiceCapture — настройки" Width="680" Height="820" MinWidth="560" MinHeight="550"
+        WindowStartupLocation="CenterScreen" Background="#F5F7FA" FontFamily="Segoe UI" FontSize="14">
+    <DockPanel Margin="24">
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+            <TextBlock Text="VoiceCapture" FontSize="28" FontWeight="SemiBold" Foreground="#172B4D"/>
+            <TextBlock Text="Удерживайте хоткей · говорите · отпустите" Foreground="#52657A" Margin="0,6,0,0"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" Foreground="#375A7F" MinHeight="38"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Закрыть в трей" Click="CloseClicked"/>
+                <Button x:Name="SaveButton" Content="Сохранить" Click="SaveClicked" IsDefault="True" Background="#245FC7" Foreground="White"/>
+            </StackPanel>
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,12,0">
+                <TextBlock Text="РАСПОЗНАВАНИЕ" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <TextBlock Text="Режим"/><ComboBox x:Name="ModeBox" SelectionChanged="ModeChanged"/>
+                <TextBlock Text="Микрофон"/><ComboBox x:Name="MicrophoneBox" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                <Button Content="Обновить микрофоны" Click="RefreshMicrophones" HorizontalAlignment="Left"/>
+                <TextBlock Text="Язык для OpenAI (Parakeet определяет автоматически)"/><ComboBox x:Name="LanguageBox"/>
+                <TextBlock Text="Термины и имена для OpenAI (Parakeet этот словарь не использует)" TextWrapping="Wrap"/>
+                <TextBox x:Name="VocabularyBox" MaxLength="2000" Height="58" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <Separator Margin="0,12"/>
+                <TextBlock Text="OPENAI" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <TextBlock Text="Личный API-ключ (защищён учётной записью Windows)"/>
+                <PasswordBox x:Name="ApiKeyBox" Padding="6" Margin="0,4,0,8"/>
+                <Button Content="Проверить ключ — без распознавания" Click="CheckKeyClicked" HorizontalAlignment="Left"/>
+                <TextBlock Text="Модель распознавания"/><TextBox x:Name="TranscriptionModelBox" MaxLength="100"/>
+                <CheckBox x:Name="CloudConsentBox" Content="Разрешаю отправку аудио / текста в OpenAI"/>
+                <TextBlock Text="API оплачивается отдельно от ChatGPT. Тест ключа не подтверждает доступность аудиомодели." FontSize="12" Foreground="#52657A" TextWrapping="Wrap"/>
+                <CheckBox x:Name="CorrectionBox" Content="Исправлять пунктуацию и очевидные ошибки через OpenAI"/>
+                <CheckBox x:Name="LocalCorrectionBox" Content="Разрешить облачную коррекцию также в локальном режиме"/>
+                <TextBlock Text="Модель коррекции"/><TextBox x:Name="CorrectionModelBox" MaxLength="100"/>
+                <TextBlock Text="Тайм-аут коррекции, секунд (1–60)"/><TextBox x:Name="CorrectionTimeoutBox"/>
+
+                <Separator Margin="0,12"/>
+                <TextBlock Text="SHERPA-ONNX · NVIDIA PARAKEET TDT V3" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <TextBlock Text="25 языков, включая русский и английский. INT8 ONNX, около 640 МиБ. NVIDIA CC BY 4.0; экспорт sherpa-onnx. Старые модели Whisper не используются и не удаляются." TextWrapping="Wrap" Foreground="#52657A" Margin="0,0,0,8"/>
+                <ComboBox x:Name="ModelBox" DisplayMemberPath="Title" SelectedValuePath="FileName" SelectionChanged="ModelChanged"/>
+                <TextBlock x:Name="ModelStatus" Foreground="#52657A"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="DownloadButton" Content="Скачать / проверить" Click="DownloadClicked"/>
+                    <Button x:Name="DeleteButton" Content="Удалить модель" Click="DeleteModelClicked"/>
+                    <Button Content="Папка" Click="OpenFolderClicked"/>
+                </StackPanel>
+                <ProgressBar x:Name="DownloadProgressBar" Height="6" Minimum="0" Maximum="1" Margin="0,4,0,10"/>
+                <TextBlock x:Name="HardwareText" TextWrapping="Wrap" Foreground="#52657A" Margin="0,4,0,6"/>
+                <TextBlock x:Name="RecommendationText" TextWrapping="Wrap" Foreground="#375A7F"/>
+                <Button x:Name="HardwareProfileButton" Content="Рекомендованные модель и режим" Click="ApplyHardwareProfileClicked" HorizontalAlignment="Left"/>
+                <TextBlock Text="Вычислительный backend (в этой поставке только CPU)" TextWrapping="Wrap"/>
+                <ComboBox x:Name="AccelerationBox" SelectionChanged="AccelerationChanged"/>
+                <TextBlock x:Name="BackendText" TextWrapping="Wrap" Foreground="#52657A" Margin="0,0,0,8"/>
+                <TextBlock Text="Задержка Parakeet в гибриде, мс (0–10000; 0 — оба сразу)" TextWrapping="Wrap"/>
+                <TextBox x:Name="DelayBox"/>
+
+                <Separator Margin="0,12"/>
+                <TextBlock Text="УПРАВЛЕНИЕ" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <TextBlock Text="Хоткей: модификаторы удерживать первыми, затем клавишу" TextWrapping="Wrap"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="ControlBox" Content="Левый Ctrl" Margin="0,5,14,5"/>
+                    <CheckBox x:Name="AltBox" Content="Левый Alt" Margin="0,5,14,5"/>
+                    <CheckBox x:Name="ShiftBox" Content="Левый Shift"/>
+                </StackPanel>
+                <ComboBox x:Name="HotkeyBox"/>
+                <CheckBox x:Name="PasteBox" Content="Автоматически вставлять в исходное активное окно"/>
+                <CheckBox x:Name="StartupBox" Content="Запускать в трее при входе в Windows"/>
+                <TextBlock Text="Esc отменяет. Лимит записи — 5 минут. Пока настройки открыты, хоткей приостановлен. История и аудио не сохраняются; системная история буфера Windows настраивается отдельно." Foreground="#52657A" TextWrapping="Wrap" Margin="0,10,0,10"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
